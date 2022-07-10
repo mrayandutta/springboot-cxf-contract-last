@@ -28,3 +28,6 @@ kubectl expose deployment springboot-cxf-contract-last --type LoadBalancer --por
 kubectl get services
 8.
 http://34.72.0.131:8080/contractlastws
+9.Delete the cluster
+
+gcloud container clusters delete cluster-1 --zone=us-central1-c
