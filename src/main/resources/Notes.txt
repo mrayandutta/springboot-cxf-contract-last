@@ -1,0 +1,30 @@
+GKE Deployment
+==============
+1.Get source code
+git clone https://github.com/mrayandutta/springboot-cxf-contract-last.git
+cd springboot-cxf-contract-last/
+2.Create the JAR deployable for the app.
+mvn -DskipTests package
+3.Enable Container Registry to store the container image that you'll create.
+gcloud services enable containerregistry.googleapis.com
+4. Use Jib to create the container image and push it to the Container Registry.
+export GOOGLE_CLOUD_PROJECT=`gcloud config list --format="value(core.project)"`
+mvn -DskipTests com.google.cloud.tools:jib-maven-plugin:build -Dimage=gcr.io/$GOOGLE_CLOUD_PROJECT/springboot-cxf-contract-last:v1
+
+5.Get authentication credentials for the cluster
+After creating your cluster, you need to get authentication credentials to interact with the cluster:
+gcloud container clusters get-credentials cluster-1 --zone=us-central1-c
+
+6. Deploy your app to Kubernetes
+sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
+kubectl create deployment springboot-cxf-contract-last --image=gcr.io/$GOOGLE_CLOUD_PROJECT/springboot-cxf-contract-last:v1
+To view the deployment that you created, simply run the following command:
+kubectl get deployments
+7.Expose the Deployment
+After deploying the application, you need to expose it to the internet so that users can access it.
+You can expose your application by creating a Service, a Kubernetes resource that exposes your application to external traffic.
+To expose your application, run the following kubectl expose command:
+kubectl expose deployment springboot-cxf-contract-last --type LoadBalancer --port 8080 --target-port 8080
+kubectl get services
+8.
+http://34.72.0.131:8080/contractlastws
